@@ -1,0 +1,18 @@
+class Account:
+    def __init__(self, balance, name, limit):
+        self.balance=balance
+        self.name=name
+        self._limit=limit
+    def check_balance(self):
+        print("Account balance is:",self.balance)
+        print("Acount name is:",self.name)
+        print("Limit is:",self._limit)
+    def charge(self, price):
+        if price +self.balance>self._limit:
+            return False
+        else:
+            return True
+Account_info=Account(10000,"Saifullah",20000)
+
+Account_info.check_balance()
+print(Account_info.charge(30000))
