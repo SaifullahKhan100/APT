@@ -1,0 +1,55 @@
+class CreditCard:
+    def __init__(self,customer, bank, acnt, limit):
+        self.customer=customer
+        self.bank=bank
+        self.account=acnt
+        self._limit=limit
+        self._balance=10
+    def check_balance(self):
+        print("Account balance is:",self.account)
+        print("Acount name is:",self.customer)
+        print("Limit is:",self._limit)
+    def charge(self, price):
+        if price +self._balance>self._limit:
+            return False
+        else:
+            return True
+Account_info=CreditCard("Saifullah Khan","Visa","1234 3421 4561",3000)
+
+Account_info.check_balance()
+print(Account_info.charge(300))
+class PredatoryCreditCard(CreditCard):
+    def __init__(self, customer, bank, acnt, limit, apr):
+        super().__init__(customer, bank, acnt, limit)
+        self._apr=apr
+        
+    def process_month(self):
+        if self._balance>0:
+            monthly_factor=pow(1+self._apr,1/12)
+            self._balance*=monthly_factor
+            return monthly_factor
+    def charge(self, price):
+        """ Charge a given fee to the card """
+        success = super().charge(price)
+        if not success:
+            self._balance += 5 # assess a penalty
+        return success
+check_month_fc=PredatoryCreditCard("Saifullah Khan","Visa","1234 3421 4561",3000,0.123)
+print(check_month_fc.process_month())
+print(check_month_fc.charge(10000))
+class Store:
+    def __init__(self,inventory):
+        self.inventory=inventory
+    class Item:
+        def __init__(self,name,price):
+            self.name=name
+            self.price=price
+    def purchase(self,item:Item,cc:CreditCard):
+        cc.charge(item.price)
+        self.inventory.remove(item)
+pcc=PredatoryCreditCard("Saifullah Khan","Visa","1234 3421 4561",3000,0.123)
+media_markt=Store([Store.Item(name="PS5", price=800),
+Store.Item(name="Xbox Series X", price=600),
+Store.Item(name="Xbox Series S", price=250)])
+ps5=media_markt.inventory[0]
+media_markt.purchase(ps5,pcc)
